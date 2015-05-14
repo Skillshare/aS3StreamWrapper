@@ -7,31 +7,35 @@
 $lines = file('mime.types');
 
 $mimeMap = array();
-foreach ($lines as $line)
-{
-  if (preg_match('/([\w\-]+\/[\w\-]+)\s+([\w ]+)\s*$/', $line, $matches))
-  {
-    $type = $matches[1];
-    $extensions = $matches[2];
-    $extensions = preg_split('/\s+/', $extensions);
-    foreach ($extensions as $extension)
-    {
-      $extension = trim($extension);
-      if (strlen($extension))
-      {
-        $mimeMap[$extension] = $type;
-      }
+
+foreach ($lines as $line) {
+    if (substr($line, 0, 1) == '#') {
+        // This is a comment
+        continue;
     }
-  }
+
+    if (preg_match('/([^\/\s]+\/[^\/\s]+)\s+(.*)/', $line, $matches)) {
+        $type = $matches[1];
+        $extensions = $matches[2];
+        $extensions = preg_split('/\s+/', $extensions);
+
+        foreach ($extensions as $extension) {
+            $extension = trim($extension);
+
+            if (strlen($extension)) {
+                $mimeMap[$extension] = $type;
+            }
+        }
+    }
 }
 
 echo("<?php\n\n");
-echo("class aS3StreamWrapperMimeTypes\n");
-echo("{\n");
-echo("  static public \$mimeTypes = array(\n");
-foreach ($mimeMap as $extension => $type)
-{
-  echo("    '$extension' => '$type',\n");
+echo("class aS3StreamWrapperMimeTypes {\n");
+echo("    static public \$mimeTypes = array(\n");
+
+foreach ($mimeMap as $extension => $type) {
+    echo("        '$extension' => '$type',\n");
 }
-echo("  );\n");
+
+echo("    );\n");
 echo("}\n");
