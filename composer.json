@@ -1,0 +1,8 @@
+{
+    "name": "skillshare/aS3StreamWrapper",
+    "autoload": {
+        "files": [
+            "lib/wrapper/aS3StreamWrapper.class.php"
+        ]
+    }
+}
